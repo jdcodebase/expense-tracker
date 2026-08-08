@@ -5,6 +5,7 @@ import cors from "cors";
 import env from "./config/env.js";
 import errorHandler from "./middleware/errorHandler.middleware.js";
 import authRoutes from "./routes/auth.route.js";
+import incomeRoutes from "./routes/income.routes.js";
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/income", incomeRoutes);
 
 // 404 Handler
 app.use((req, res) => {
