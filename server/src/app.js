@@ -6,6 +6,8 @@ import env from "./config/env.js";
 import errorHandler from "./middleware/errorHandler.middleware.js";
 import authRoutes from "./routes/auth.route.js";
 import incomeRoutes from "./routes/income.routes.js";
+import expenseRoutes from "./routes/expense.routes.js";
+import reportRoutes from "./routes/report.routes.js";
 
 const app = express();
 
@@ -34,6 +36,8 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/income", incomeRoutes);
+app.use("/api/v1/expense", expenseRoutes);
+app.use("/api/v1/reports", reportRoutes);
 
 // 404 Handler
 app.use((req, res) => {
