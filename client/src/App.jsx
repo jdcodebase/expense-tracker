@@ -9,6 +9,8 @@ import NotFound from "./pages/NotFound";
 
 import ProtectedRoute from "./components/routes/ProtectedRoute";
 import PublicRoute from "./components/routes/PublicRoute";
+import Income from "./pages/Income";
+import AddIncome from "./pages/AddIncome";
 
 function App() {
   return (
@@ -51,6 +53,19 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route path="/income/add" element={<AddIncome />} />
+
+        <Route
+          path="/income"
+          element={
+            <ProtectedRoute>
+              <Income />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="/income/edit/:id" element={<AddIncome />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>

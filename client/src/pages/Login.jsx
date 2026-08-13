@@ -34,6 +34,8 @@ const Login = () => {
 
     if (loading) return;
 
+    const { email, password } = formData;
+
     if (!email) {
       toast.error("Email is required.");
       return;
