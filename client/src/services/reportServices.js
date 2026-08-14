@@ -25,7 +25,3 @@ export const getMonthlyExpenseTrend = (year) => {
     },
   });
 };
-
-export const getExpenses = () => {
-  return API.get("/expense");
-};

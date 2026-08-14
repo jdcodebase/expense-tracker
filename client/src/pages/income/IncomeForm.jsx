@@ -7,9 +7,9 @@ import {
   addIncome,
   getIncomeById,
   updateIncome,
-} from "../services/incomeServices";
+} from "../../services/incomeServices";
 
-const AddIncome = () => {
+const IncomeForm = () => {
   const [formData, setFormData] = useState({
     title: "",
     amount: "",
@@ -26,6 +26,7 @@ const AddIncome = () => {
 
   const isEditMode = Boolean(id);
 
+  // Fetch income when editing
   useEffect(() => {
     if (!isEditMode) return;
 
@@ -57,6 +58,7 @@ const AddIncome = () => {
     fetchIncome();
   }, [id, isEditMode, navigate]);
 
+  // Handle input changes
   const handleChange = (event) => {
     const { name, value } = event.target;
 
@@ -66,6 +68,16 @@ const AddIncome = () => {
     }));
   };
 
+  // Handle back navigation
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate("/dashboard");
+    }
+  };
+
+  // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -73,13 +85,14 @@ const AddIncome = () => {
 
     const { title, amount, date, source, notes } = formData;
 
+    // Validation
     if (!title.trim()) {
       toast.error("Title is required.");
       return;
     }
 
-    if (!amount) {
-      toast.error("Amount is required.");
+    if (!amount || Number(amount) <= 0) {
+      toast.error("Amount must be greater than 0.");
       return;
     }
 
@@ -127,36 +140,41 @@ const AddIncome = () => {
     }
   };
 
+  // Loading state while fetching income
   if (fetchingIncome) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
-        <p className="text-sm text-gray-500">Loading income...</p>
+      <div className="flex min-h-screen items-center justify-center bg-slate-50">
+        <p className="text-sm text-slate-500">Loading income...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-8">
+    <div className="min-h-screen bg-slate-50 px-4 py-8">
       <div className="mx-auto max-w-2xl">
         {/* Back Button */}
         <button
           type="button"
-          onClick={() => navigate("/income")}
-          className="mb-6 flex items-center gap-2 text-sm font-medium text-gray-600 transition hover:text-indigo-600"
+          onClick={handleBack}
+          className="mb-6 flex items-center gap-2 text-sm font-medium text-slate-600 transition hover:text-emerald-600"
         >
           <FaArrowLeft />
-          Back to Income
+          Back
         </button>
 
-        {/* Card */}
-        <div className="rounded-2xl bg-white p-6 shadow-md sm:p-8">
+        {/* Form Card */}
+        <div className="rounded-2xl border border-emerald-100 bg-white p-6 shadow-md sm:p-8">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-2xl font-bold text-gray-800">
+            <div className="mb-3 inline-flex rounded-lg bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+              {isEditMode ? "EDIT INCOME" : "NEW INCOME"}
+            </div>
+
+            <h1 className="text-2xl font-bold text-slate-800">
               {isEditMode ? "Edit Income" : "Add Income"}
             </h1>
 
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-slate-500">
               {isEditMode
                 ? "Update your income record."
                 : "Record a new source of income."}
@@ -169,7 +187,7 @@ const AddIncome = () => {
             <div>
               <label
                 htmlFor="title"
-                className="mb-2 block text-sm font-medium text-gray-700"
+                className="mb-2 block text-sm font-medium text-slate-700"
               >
                 Title
               </label>
@@ -181,7 +199,7 @@ const AddIncome = () => {
                 placeholder="e.g. Monthly Salary"
                 value={formData.title}
                 onChange={handleChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               />
             </div>
 
@@ -189,13 +207,13 @@ const AddIncome = () => {
             <div>
               <label
                 htmlFor="amount"
-                className="mb-2 block text-sm font-medium text-gray-700"
+                className="mb-2 block text-sm font-medium text-slate-700"
               >
                 Amount
               </label>
 
               <div className="relative">
-                <FaMoneyBillWave className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                <FaMoneyBillWave className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-500" />
 
                 <input
                   id="amount"
@@ -206,7 +224,7 @@ const AddIncome = () => {
                   placeholder="Enter amount"
                   value={formData.amount}
                   onChange={handleChange}
-                  className="w-full rounded-lg border border-gray-300 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                  className="w-full rounded-lg border border-slate-300 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                 />
               </div>
             </div>
@@ -215,13 +233,13 @@ const AddIncome = () => {
             <div>
               <label
                 htmlFor="date"
-                className="mb-2 block text-sm font-medium text-gray-700"
+                className="mb-2 block text-sm font-medium text-slate-700"
               >
                 Date
               </label>
 
               <div className="relative">
-                <FaCalendarAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                <FaCalendarAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-500" />
 
                 <input
                   id="date"
@@ -229,7 +247,7 @@ const AddIncome = () => {
                   type="date"
                   value={formData.date}
                   onChange={handleChange}
-                  className="w-full rounded-lg border border-gray-300 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                  className="w-full rounded-lg border border-slate-300 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                 />
               </div>
             </div>
@@ -238,7 +256,7 @@ const AddIncome = () => {
             <div>
               <label
                 htmlFor="source"
-                className="mb-2 block text-sm font-medium text-gray-700"
+                className="mb-2 block text-sm font-medium text-slate-700"
               >
                 Source
               </label>
@@ -250,7 +268,7 @@ const AddIncome = () => {
                 placeholder="e.g. Salary, Freelance, Business"
                 value={formData.source}
                 onChange={handleChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               />
             </div>
 
@@ -258,7 +276,7 @@ const AddIncome = () => {
             <div>
               <label
                 htmlFor="notes"
-                className="mb-2 block text-sm font-medium text-gray-700"
+                className="mb-2 block text-sm font-medium text-slate-700"
               >
                 Notes
               </label>
@@ -270,7 +288,7 @@ const AddIncome = () => {
                 placeholder="Add any additional notes..."
                 value={formData.notes}
                 onChange={handleChange}
-                className="w-full resize-none rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                className="w-full resize-none rounded-lg border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               />
             </div>
 
@@ -278,7 +296,7 @@ const AddIncome = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-indigo-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-lg bg-emerald-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading
                 ? isEditMode
@@ -295,4 +313,4 @@ const AddIncome = () => {
   );
 };
 
-export default AddIncome;
+export default IncomeForm;

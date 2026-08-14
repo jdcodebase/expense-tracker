@@ -65,7 +65,11 @@ const MonthlyExpenseChart = () => {
       {
         label: "Expenses",
         data: monthlyExpenses.map((item) => item.totalExpenses),
+        backgroundColor: "rgba(59, 130, 246, 0.75)",
+        borderColor: "rgb(37, 99, 235)",
+        borderWidth: 1,
         borderRadius: 6,
+        hoverBackgroundColor: "rgba(37, 99, 235, 0.9)",
       },
     ],
   };
@@ -78,11 +82,37 @@ const MonthlyExpenseChart = () => {
       legend: {
         display: false,
       },
+
+      tooltip: {
+        callbacks: {
+          label: (context) => ` ₹${context.raw.toLocaleString("en-IN")}`,
+        },
+      },
     },
 
     scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+
+        ticks: {
+          color: "#64748b",
+        },
+      },
+
       y: {
         beginAtZero: true,
+
+        grid: {
+          color: "#e2e8f0",
+        },
+
+        ticks: {
+          color: "#64748b",
+
+          callback: (value) => `₹${Number(value).toLocaleString("en-IN")}`,
+        },
       },
     },
   };

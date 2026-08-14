@@ -50,11 +50,27 @@ const ExpenseCategoryChart = () => {
 
   const data = {
     labels: categories.map((category) => category._id),
+
     datasets: [
       {
         label: "Expenses",
         data: categories.map((category) => category.totalAmount),
-        borderWidth: 1,
+
+        backgroundColor: [
+          "#6366f1",
+          "#8b5cf6",
+          "#a855f7",
+          "#d946ef",
+          "#ec4899",
+          "#3b82f6",
+          "#06b6d4",
+          "#14b8a6",
+        ],
+
+        borderColor: "#ffffff",
+        borderWidth: 2,
+
+        hoverOffset: 6,
       },
     ],
   };
@@ -66,6 +82,28 @@ const ExpenseCategoryChart = () => {
     plugins: {
       legend: {
         position: "bottom",
+
+        labels: {
+          padding: 16,
+          usePointStyle: true,
+          pointStyle: "circle",
+          color: "#475569",
+          font: {
+            size: 12,
+          },
+        },
+      },
+
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            const value = context.raw;
+
+            return ` ${context.label}: ₹${Number(value).toLocaleString(
+              "en-IN",
+            )}`;
+          },
+        },
       },
     },
   };

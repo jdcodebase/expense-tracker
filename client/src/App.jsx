@@ -2,18 +2,21 @@ import { Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 import LandingPage from "./pages/LandingPage";
-import Register from "./pages/Register";
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
+import Register from "./pages/auth/Register";
+import Login from "./pages/auth/Login";
+import Dashboard from "./pages/dashboard/Dashboard";
 import NotFound from "./pages/NotFound";
+
+import IncomeForm from "./pages/income/IncomeForm";
+import Income from "./pages/income/Income";
+
+import Expense from "./pages/expense/Expense";
+import ExpenseForm from "./pages/expense/ExpenseForm";
+
+import Transactions from "./pages/transactions/Transactions";
 
 import ProtectedRoute from "./components/routes/ProtectedRoute";
 import PublicRoute from "./components/routes/PublicRoute";
-import Income from "./pages/Income";
-import AddIncome from "./pages/AddIncome";
-import AddExpense from "./pages/AddExpense";
-import Expense from "./pages/Expense";
-import Transactions from "./pages/Transactions";
 
 function App() {
   return (
@@ -21,6 +24,7 @@ function App() {
       <Toaster position="top-center" reverseOrder={false} />
 
       <Routes>
+        {/* Public Routes */}
         <Route
           path="/"
           element={
@@ -48,6 +52,7 @@ function App() {
           }
         />
 
+        {/* Protected Routes */}
         <Route
           path="/dashboard"
           element={
@@ -57,7 +62,16 @@ function App() {
           }
         />
 
-        <Route path="/income/add" element={<AddIncome />} />
+        {/* Income */}
+
+        <Route
+          path="/income/add"
+          element={
+            <ProtectedRoute>
+              <IncomeForm />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/income"
@@ -68,16 +82,53 @@ function App() {
           }
         />
 
-        <Route path="/income/edit/:id" element={<AddIncome />} />
+        <Route
+          path="/income/edit/:id"
+          element={
+            <ProtectedRoute>
+              <IncomeForm />
+            </ProtectedRoute>
+          }
+        />
 
-        <Route path="/expense/add" element={<AddExpense />} />
+        <Route
+          path="/expense"
+          element={
+            <ProtectedRoute>
+              <Expense />
+            </ProtectedRoute>
+          }
+        />
 
-        <Route path="/expense" element={<Expense />} />
+        <Route
+          path="/expense/add"
+          element={
+            <ProtectedRoute>
+              <ExpenseForm />
+            </ProtectedRoute>
+          }
+        />
 
-        <Route path="/expense/edit/:id" element={<AddExpense />} />
+        <Route
+          path="/expense/edit/:id"
+          element={
+            <ProtectedRoute>
+              <ExpenseForm />
+            </ProtectedRoute>
+          }
+        />
 
-        <Route path="/transactions" element={<Transactions />} />
+        {/* Transactions */}
+        <Route
+          path="/transactions"
+          element={
+            <ProtectedRoute>
+              <Transactions />
+            </ProtectedRoute>
+          }
+        />
 
+        {/* Not Found */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

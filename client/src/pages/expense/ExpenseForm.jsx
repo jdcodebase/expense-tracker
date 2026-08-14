@@ -7,9 +7,9 @@ import {
   addExpense,
   updateExpense,
   getExpenseById,
-} from "../services/expense.service";
+} from "../../services/expense.service";
 
-const AddExpense = () => {
+const ExpenseForm = () => {
   const [formData, setFormData] = useState({
     title: "",
     amount: "",
@@ -27,6 +27,7 @@ const AddExpense = () => {
 
   const isEditMode = Boolean(id);
 
+  // Fetch expense when editing
   useEffect(() => {
     if (!isEditMode) return;
 
@@ -35,7 +36,7 @@ const AddExpense = () => {
 
       try {
         const response = await getExpenseById(id);
-        const expense = response.data;
+        const expense = response.data.data;
 
         if (!expense) {
           toast.error("Expense not found.");
@@ -54,7 +55,7 @@ const AddExpense = () => {
           notes: expense.notes || "",
         });
       } catch (error) {
-        console.log(error);
+        console.error("Failed to fetch expense:", error);
 
         toast.error(
           error.response?.data?.message || "Failed to fetch expense.",
@@ -69,6 +70,7 @@ const AddExpense = () => {
     fetchExpense();
   }, [id, isEditMode, navigate]);
 
+  // Handle input changes
   const handleChange = (event) => {
     const { name, value } = event.target;
 
@@ -78,6 +80,16 @@ const AddExpense = () => {
     }));
   };
 
+  // Handle back navigation
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate("/dashboard");
+    }
+  };
+
+  // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -85,13 +97,14 @@ const AddExpense = () => {
 
     const { title, amount, category, date, paymentMethod, notes } = formData;
 
+    // Validation
     if (!title.trim()) {
       toast.error("Title is required.");
       return;
     }
 
-    if (!amount) {
-      toast.error("Amount is required.");
+    if (!amount || Number(amount) <= 0) {
+      toast.error("Amount must be greater than 0.");
       return;
     }
 
@@ -134,47 +147,52 @@ const AddExpense = () => {
 
       navigate("/expense");
     } catch (error) {
+      console.error("Failed to save expense:", error);
+
       toast.error(
         error.response?.data?.message ||
           `Failed to ${isEditMode ? "update" : "add"} expense.`,
       );
-
-      console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
+  // Loading state while fetching existing expense
   if (fetchingExpense) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
-        <p className="text-sm text-gray-500">Loading expense...</p>
+      <div className="flex min-h-screen items-center justify-center bg-slate-50">
+        <p className="text-sm text-slate-500">Loading expense...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-8">
+    <div className="min-h-screen bg-slate-50 px-4 py-8">
       <div className="mx-auto max-w-2xl">
         {/* Back Button */}
         <button
           type="button"
-          onClick={() => navigate("/expense")}
-          className="mb-6 flex items-center gap-2 text-sm font-medium text-gray-600 transition hover:text-indigo-600"
+          onClick={handleBack}
+          className="mb-6 flex items-center gap-2 text-sm font-medium text-slate-600 transition hover:text-red-600"
         >
           <FaArrowLeft />
-          Back to Expense
+          Back
         </button>
 
-        {/* Card */}
-        <div className="rounded-2xl bg-white p-6 shadow-md sm:p-8">
+        {/* Form Card */}
+        <div className="rounded-2xl border border-red-100 bg-white p-6 shadow-md sm:p-8">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-2xl font-bold text-gray-800">
+            <div className="mb-3 inline-flex rounded-lg bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+              {isEditMode ? "EDIT EXPENSE" : "NEW EXPENSE"}
+            </div>
+
+            <h1 className="text-2xl font-bold text-slate-800">
               {isEditMode ? "Edit Expense" : "Add Expense"}
             </h1>
 
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-slate-500">
               {isEditMode
                 ? "Update your expense record."
                 : "Record a new expense."}
@@ -186,7 +204,7 @@ const AddExpense = () => {
             <div>
               <label
                 htmlFor="title"
-                className="mb-2 block text-sm font-medium text-gray-700"
+                className="mb-2 block text-sm font-medium text-slate-700"
               >
                 Title
               </label>
@@ -198,7 +216,7 @@ const AddExpense = () => {
                 placeholder="e.g. Train Ticket"
                 value={formData.title}
                 onChange={handleChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-100"
               />
             </div>
 
@@ -206,13 +224,13 @@ const AddExpense = () => {
             <div>
               <label
                 htmlFor="amount"
-                className="mb-2 block text-sm font-medium text-gray-700"
+                className="mb-2 block text-sm font-medium text-slate-700"
               >
                 Amount
               </label>
 
               <div className="relative">
-                <FaMoneyBillWave className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                <FaMoneyBillWave className="absolute left-4 top-1/2 -translate-y-1/2 text-red-500" />
 
                 <input
                   id="amount"
@@ -223,7 +241,7 @@ const AddExpense = () => {
                   placeholder="Enter amount"
                   value={formData.amount}
                   onChange={handleChange}
-                  className="w-full rounded-lg border border-gray-300 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                  className="w-full rounded-lg border border-slate-300 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-100"
                 />
               </div>
             </div>
@@ -232,7 +250,7 @@ const AddExpense = () => {
             <div>
               <label
                 htmlFor="category"
-                className="mb-2 block text-sm font-medium text-gray-700"
+                className="mb-2 block text-sm font-medium text-slate-700"
               >
                 Category
               </label>
@@ -242,7 +260,7 @@ const AddExpense = () => {
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
-                className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-100"
               >
                 <option value="">Select category</option>
                 <option value="Food">Food</option>
@@ -260,13 +278,13 @@ const AddExpense = () => {
             <div>
               <label
                 htmlFor="date"
-                className="mb-2 block text-sm font-medium text-gray-700"
+                className="mb-2 block text-sm font-medium text-slate-700"
               >
                 Date
               </label>
 
               <div className="relative">
-                <FaCalendarAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                <FaCalendarAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-red-500" />
 
                 <input
                   id="date"
@@ -274,7 +292,7 @@ const AddExpense = () => {
                   type="date"
                   value={formData.date}
                   onChange={handleChange}
-                  className="w-full rounded-lg border border-gray-300 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                  className="w-full rounded-lg border border-slate-300 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-100"
                 />
               </div>
             </div>
@@ -283,7 +301,7 @@ const AddExpense = () => {
             <div>
               <label
                 htmlFor="paymentMethod"
-                className="mb-2 block text-sm font-medium text-gray-700"
+                className="mb-2 block text-sm font-medium text-slate-700"
               >
                 Payment Method
               </label>
@@ -293,7 +311,7 @@ const AddExpense = () => {
                 name="paymentMethod"
                 value={formData.paymentMethod}
                 onChange={handleChange}
-                className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-100"
               >
                 <option value="">Select payment method</option>
                 <option value="Cash">Cash</option>
@@ -308,7 +326,7 @@ const AddExpense = () => {
             <div>
               <label
                 htmlFor="notes"
-                className="mb-2 block text-sm font-medium text-gray-700"
+                className="mb-2 block text-sm font-medium text-slate-700"
               >
                 Notes
               </label>
@@ -320,7 +338,7 @@ const AddExpense = () => {
                 placeholder="Add any additional notes..."
                 value={formData.notes}
                 onChange={handleChange}
-                className="w-full resize-none rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                className="w-full resize-none rounded-lg border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-100"
               />
             </div>
 
@@ -328,7 +346,7 @@ const AddExpense = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-indigo-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-lg bg-red-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading
                 ? isEditMode
@@ -345,4 +363,4 @@ const AddExpense = () => {
   );
 };
 
-export default AddExpense;
+export default ExpenseForm;

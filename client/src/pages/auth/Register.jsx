@@ -4,15 +4,15 @@ import { useNavigate } from "react-router-dom";
 import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 
-import AuthLayout from "../components/auth/AuthLayout";
-import AuthHeader from "../components/auth/AuthHeader";
-import AuthInput from "../components/auth/AuthInput";
-import PasswordInput from "../components/auth/PasswordInput";
-import AuthButton from "../components/auth/AuthButton";
-import AuthFooter from "../components/auth/AuthFooter";
+import AuthLayout from "../../components/auth/AuthLayout";
+import AuthHeader from "../../components/auth/AuthHeader";
+import AuthInput from "../../components/auth/AuthInput";
+import PasswordInput from "../../components/auth/PasswordInput";
+import AuthButton from "../../components/auth/AuthButton";
+import AuthFooter from "../../components/auth/AuthFooter";
 
-import { registerUser } from "../services/authService";
-import { useAuth } from "../context/AuthContext";
+import { registerUser } from "../../services/authService";
+import { useAuth } from "../../context/AuthContext";
 
 const Register = () => {
   const navigate = useNavigate();

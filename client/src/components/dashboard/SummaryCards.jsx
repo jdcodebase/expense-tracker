@@ -43,18 +43,30 @@ const SummaryCards = () => {
     {
       title: "Total Income",
       value: summary.totalIncome,
+      className: "border-emerald-200 bg-emerald-50",
+      titleClass: "text-emerald-700",
+      valueClass: "text-emerald-900",
     },
     {
       title: "Total Expense",
       value: summary.totalExpenses,
+      className: "border-red-200 bg-red-50",
+      titleClass: "text-red-700",
+      valueClass: "text-red-900",
     },
     {
       title: "Total Savings",
       value: summary.savings,
+      className: "border-blue-200 bg-blue-50",
+      titleClass: "text-blue-700",
+      valueClass: "text-blue-900",
     },
     {
       title: "Current Balance",
       value: summary.currentBalance,
+      className: "border-indigo-200 bg-indigo-50",
+      titleClass: "text-indigo-700",
+      valueClass: "text-indigo-900",
     },
   ];
 
@@ -63,11 +75,13 @@ const SummaryCards = () => {
       {cards.map((card) => (
         <div
           key={card.title}
-          className="rounded-xl border bg-white p-5 shadow-sm"
+          className={`rounded-xl border p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md ${card.className}`}
         >
-          <p className="text-sm font-medium text-gray-500">{card.title}</p>
+          <p className={`text-sm font-semibold ${card.titleClass}`}>
+            {card.title}
+          </p>
 
-          <p className="mt-2 text-2xl font-bold text-gray-900">
+          <p className={`mt-2 text-2xl font-bold ${card.valueClass}`}>
             {loading ? "Loading..." : `₹${card.value.toLocaleString("en-IN")}`}
           </p>
         </div>
