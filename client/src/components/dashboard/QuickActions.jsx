@@ -25,6 +25,13 @@ const QuickActions = () => {
       >
         + Add Expense
       </button>
+
+      <button
+        onClick={() => navigate("/expense")}
+        className="rounded-lg border bg-white px-5 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
+      >
+        View Expense
+      </button>
     </div>
   );
 };

@@ -5,6 +5,7 @@ import {
   getExpenses,
   updateExpense,
   deleteExpense,
+  getExpenseById,
 } from "../controllers/expense.controller.js";
 
 import { authenticateToken } from "../middleware/auth.middleware.js";
@@ -19,6 +20,8 @@ router.post("/", createExpense);
 
 // Get all expenses
 router.get("/", getExpenses);
+
+router.get("/:id", getExpenseById);
 
 // Update expense
 router.put("/:id", updateExpense);

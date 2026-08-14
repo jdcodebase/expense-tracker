@@ -11,6 +11,9 @@ import ProtectedRoute from "./components/routes/ProtectedRoute";
 import PublicRoute from "./components/routes/PublicRoute";
 import Income from "./pages/Income";
 import AddIncome from "./pages/AddIncome";
+import AddExpense from "./pages/AddExpense";
+import Expense from "./pages/Expense";
+import Transactions from "./pages/Transactions";
 
 function App() {
   return (
@@ -66,6 +69,14 @@ function App() {
         />
 
         <Route path="/income/edit/:id" element={<AddIncome />} />
+
+        <Route path="/expense/add" element={<AddExpense />} />
+
+        <Route path="/expense" element={<Expense />} />
+
+        <Route path="/expense/edit/:id" element={<AddExpense />} />
+
+        <Route path="/transactions" element={<Transactions />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>

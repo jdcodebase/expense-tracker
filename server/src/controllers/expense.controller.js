@@ -44,6 +44,23 @@ export const getExpenses = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, expenses, "Expenses fetched successfully."));
 });
 
+export const getExpenseById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const expense = await Expense.findOne({
+    _id: id,
+    userId: req.user._id,
+  });
+
+  if (!expense) {
+    throw new ApiError(404, "Expense not found.");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, expense, "Expense fetched successfully."));
+});
+
 // Update Expense
 export const updateExpense = asyncHandler(async (req, res) => {
   const { id } = req.params;
